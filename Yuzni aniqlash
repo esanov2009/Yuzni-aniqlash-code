@@ -1,0 +1,33 @@
+#ushbu kodni terminalga yozib kutubxonalrni yuklab oling --> "pip install opencv-python"
+import cv2
+
+# Yuzni aniqlash uchun Haar kaskad faylini yuklang
+face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+
+# Web kamerani oching
+cap = cv2.VideoCapture(0)
+
+while True:
+    # Kameradan rasmni oling
+    ret, frame = cap.read()
+    
+    # Rasmni kulrang formatga o'tkazing
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    
+    # Yuzlarni aniqlang
+    faces = face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30), flags=cv2.CASCADE_SCALE_IMAGE)
+    
+    # Aniqlangan yuzlar ustiga to'rtburchaklar chizing
+    for (x, y, w, h) in faces:
+        cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 2)
+    
+    # Natijani ko'rsating
+    cv2.imshow('Yuzni aniqlash', frame)
+    
+    # 'q' tugmasini bosish orqali chiqish
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+
+# Kamerani yopish va barcha oynalarni yo'q qilish
+cap.release()
+cv2.destroyAllWindows()
